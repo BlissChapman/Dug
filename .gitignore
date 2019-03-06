@@ -1,0 +1,26 @@
+# Custom exception to allow empty directories to be added
+!*.gitkeep
+
+# Example data directories
+toy_problems/grasp_and_lift/data/
+toy_problems/grasp_and_lift/cache/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
