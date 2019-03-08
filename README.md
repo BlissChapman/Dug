@@ -14,6 +14,16 @@ Project Dug is an exploratory effort to extract actionable signal from a custom 
 <img src="resources/documentation/dug.jpg" alt="drawing" width="800"/><img src="resources/documentation/Dug_Poster.png" alt="drawing" width="800"/>
 ------------
 
+## Team
+Jessica Austriaco, Bioengineering 2019, Team Lead
+Bliss Chapman, Statistics + Computer Science 2019, Signal Processing Lead
+Matthew De Venecia, Bioengineering 2019, Hardware Lead
+Amanda Maher, Mechanical Engineering 2020, Electrode + Materials + Cap Lead
+Suva Laxminarayanan, Bioengineering 2022
+Christine Lannon, Bioengineering 2019
+James Soole, Bioengineering 2022
+Kyla Swain, Bioengineering 2019
+
 ## Technical Details
 Electrodes are 3D-printed out of PLA and painted with a Nickel conductive coating.
 
@@ -114,14 +124,6 @@ conda activate py27
 * [xDAWN algorithm to enhance evoked potentials: application to brain-computer interface.](https://www.ncbi.nlm.nih.gov/pubmed/19174332)
 * [3D printed dry EEG electrodes](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5087423/)
 
-
-#### Team
-| EEG Electrodes, Materials, Cap | Signal Processing | Collar Hardware & Recordings | Videography & Presentation | Finance & Logistics |
-| ------------------------------ | ----------------- | ---------------------------- | -------------------------- | ------------------- |
-| Amanda Maher                   | Bliss Chapman     | James Soole                  | Christine Lannon & Alma    | Jessica Austriaco   |
-| Bliss Chapman                  | Matthew De Venecia| Suva Laxminarayanan          | Jessica Austriaco          | Christine Lannon & Alma |
-| Bailey Zinger                  | Jessica Austriaco | Kyla Swain                   | Suva Laxminarayanan        | Bliss Chapman       |
-| Christine Lannon               |                   | Bailey Zinger                | Amanda Maher               |                     |
 
 #### 1st Meeting Notes (1/3/2019)
 
