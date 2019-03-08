@@ -15,14 +15,14 @@ Project Dug is an exploratory effort to extract actionable signal from a custom 
 ------------
 
 ## Team
-Jessica Austriaco, Bioengineering 2019, Team Lead
-Bliss Chapman, Statistics + Computer Science 2019, Signal Processing Lead
-Matthew De Venecia, Bioengineering 2019, Hardware Lead
-Amanda Maher, Mechanical Engineering 2020, Electrode + Materials + Cap Lead
-Suva Laxminarayanan, Bioengineering 2022
-Christine Lannon, Bioengineering 2019
-James Soole, Bioengineering 2022
-Kyla Swain, Bioengineering 2019
+- Jessica Austriaco, Bioengineering 2019, Team Lead
+- Bliss Chapman, Statistics + Computer Science 2019, Signal Processing Lead
+- Matthew De Venecia, Bioengineering 2019, Hardware Lead
+- Amanda Maher, Mechanical Engineering 2020, Electrode + Materials + Cap Lead
+- Suva Laxminarayanan, Bioengineering 2022
+- Christine Lannon, Bioengineering 2019
+- James Soole, Bioengineering 2022
+- Kyla Swain, Bioengineering 2019
 
 ## Technical Details
 Electrodes are 3D-printed out of PLA and painted with a Nickel conductive coating.
