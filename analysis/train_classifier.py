@@ -9,6 +9,7 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
+from sklearn.neural_network import MLPClassifier
 
 
 parser = argparse.ArgumentParser(description='Train, evaluate, and save classifier on data at specified path.')
@@ -62,16 +63,28 @@ for t_i in range(int(SECONDS_TO_SAMPLES(t_start)), int(SECONDS_TO_SAMPLES(t_end)
     
 x = new_x
 
-# Apply Fast Fourier Transform to every set of time points
+# Apply Fast Fourier Transform and frequency filtering to every set of
+# time points
+def filtered_frequency_domain_data(signal, T=1.0/192.0):
+    W = np.fft.fftfreq(int(signal.size/2) + 1, T)
+    f_signal = np.abs(np.real(np.fft.rfft(signal)))
+    f_signal[W < 7.5] = 0
+    f_signal[W > 30] = 0
+    f_signal /= max(f_signal)
+    return f_signal, W
+
+f_x = []
 for i in range(0, x.shape[0]):
-	x[i] = np.real(np.fft.fft(x[i]))
+	f_x_i, _ = filtered_frequency_domain_data(x[i])
+	f_x.append(f_x_i)
+f_x = np.array(f_x)
 
 # ======================================================================
 # Train Model
 # ======================================================================
 
 # Split data
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(f_x, y, test_size=0.2, random_state=42)
 
 # Normalize data
 scaler = StandardScaler()
@@ -79,15 +92,27 @@ x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
 # Rebalance
-num_samples_max_class = max(y_train.shape[0] - int(np.sum(y_train)), int(np.sum(y_train)))
-sm = SMOTE(random_state=42, sampling_strategy={0:num_samples_max_class, 1:num_samples_max_class})
-x_train, y_train = sm.fit_resample(x_train, y_train)
+stimuli_samples_N = int(np.sum(y_train))
+baseline_samples_N = y_train.shape[0] - int(np.sum(y_train))
+num_samples_max_class = max(stimuli_samples_N, baseline_samples_N)
 
+if stimuli_samples_N > baseline_samples_N:
+	stimuli_multiplier = 1
+	baseline_multiplier = 1
+else:
+	stimuli_multiplier = 1
+	baseline_multiplier = 1
+
+sm = SMOTE(random_state=42, sampling_strategy={0:baseline_multiplier*num_samples_max_class, 1:stimuli_multiplier*num_samples_max_class})
+x_train, y_train = sm.fit_resample(x_train, y_train)
+print(x_train.shape)
 # Fit model
 if args.model_type == "SVC":
 	model = SVC(verbose=True)
 elif args.model_type == "LR":
 	model = LogisticRegression(solver='sag', n_jobs=-1, verbose=True)
+elif args.model_type == "NN":
+	model = MLPClassifier(hidden_layer_sizes=(50, 30, 10), verbose=True)
 else:
 	print("Unknown model type '{0}' specified. View the params help guide to see supported model types.")
 	exit(1)

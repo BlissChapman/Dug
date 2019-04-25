@@ -19,7 +19,6 @@ GPIO.setwarnings(False)
 GPIO.setup(STATUS_PIN, GPIO.OUT)
 
 def set_status_indicator(status):
-	print(status)
 	GPIO.output(STATUS_PIN, GPIO.HIGH if status else GPIO.LOW)
 
 # ======================================================================
@@ -34,10 +33,19 @@ with open(args.model_path+'scaler.pkl', 'rb') as scaler_f:
 with open(args.model_path+'model.pkl', 'rb') as model_f:
         model = pickle.load(model_f)
 
+def filtered_frequency_domain_data(signal, T=1.0/192.0):
+    W = np.fft.fftfreq(int(signal.size/2) + 1, T)
+    f_signal = np.abs(np.real(np.fft.rfft(signal)))
+    f_signal[W < 7.5] = 0
+    f_signal[W > 30] = 0
+    f_signal /= max(f_signal)
+    return f_signal, W
+
 def classify_data_window(x):
-	x = np.reshape(np.real(np.fft.fft(x)), (1, -1))
-	x = scaler.transform(x)
-	stimulus_present_prediction = model.predict(x)[0]
+	f_x, _ = filtered_frequency_domain_data(x)
+	f_x = np.reshape(f_x, (1, -1))
+	f_x = scaler.transform(f_x)
+	stimulus_present_prediction = model.predict(f_x)[0]
 	print("STIMULUS PRESENT: {0}".format(stimulus_present_prediction))
 	return stimulus_present_prediction
 
@@ -56,7 +64,7 @@ def play_sound(resource):
 	os.system('omxplayer -o local {0}'.format(resource))
 
 # Sound check
-play_sound(SOUND_ALMA_TREAT)
+play_sound(SOUND_ALMA_INTRO)
 
 # ======================================================================
 # Data window
@@ -79,6 +87,9 @@ IGNORE_DATA_N = 0
 
 # Data structure to hold the sliding window of data.
 data = []
+
+J = 5
+last_j_classifications = [0 for j in range(0, J)]
 
 # ======================================================================
 # Main Loop
@@ -122,11 +133,17 @@ while True:
 	status_indicator = not status_indicator
 
 	# Classification
-	if classify_data_window(np.array(data)):
+	last_j_classifications.pop(0)
+	last_j_classifications.append(classify_data_window(np.array(data)))
+	classification_moving_avg = np.mean(last_j_classifications)
+	print("Classification moving average: {0}\n".format(classification_moving_avg))
+	
+	if classification_moving_avg > 0.5:
 		play_sound(SOUND_ALMA_TREAT)
 		data = []                              # Reset data window
-		IGNORE_DATA_N = SECONDS_TO_SAMPLES(30) # Ignore next 30s of data
+		last_j_classifications = [0 for j in range(0, J)]
+		IGNORE_DATA_N = SECONDS_TO_SAMPLES(10) # Ignore next 30s of data
 	else:
 		# Performance hack:
 		data = []
-		IGNORE_DATA_N = SECONDS_TO_SAMPLES(1)  # Ignore next 1s of data
+		IGNORE_DATA_N = SECONDS_TO_SAMPLES(0.5)  # Ignore next 1s of data

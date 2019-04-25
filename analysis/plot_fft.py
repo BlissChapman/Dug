@@ -10,7 +10,7 @@ args = parser.parse_args()
 
 # Load data
 stimulus_data = []
-no_stimulus_data = []
+baseline_data = []
 
 with open(args.data_path, 'r') as data_f:
     for row in data_f:
@@ -19,46 +19,40 @@ with open(args.data_path, 'r') as data_f:
         if s_i:
             stimulus_data.append(d_i)
         else:
-            no_stimulus_data.append(d_i)
+            baseline_data.append(d_i)
 
 stimulus_data = np.array(stimulus_data, dtype=float)
-no_stimulus_data = np.array(no_stimulus_data, dtype=float)
+baseline_data = np.array(baseline_data, dtype=float)
 
 plot_stimulus = True
 plot_baseline = True
 
 if stimulus_data.shape[0] == 0:
     plot_stimulus= False
-    stimulus_data = np.ones(no_stimulus_data.shape[0])
-if no_stimulus_data.shape[0] == 0:
+    stimulus_data = np.ones(baseline_data.shape[0])
+if baseline_data.shape[0] == 0:
     plot_baseline = False
-    no_stimulus_data = np.ones(stimulus_data.shape[0])
+    baseline_data = np.ones(stimulus_data.shape[0])
 
-stimulus_data_N = stimulus_data.shape[0]
-no_stimulus_data_N = no_stimulus_data.shape[0]
-T = 1.0 / 260.0
-
-#x = np.linspace(0.0, stimulus_data_N*T, stimulus_data_N)
-#stimulus_data = np.sin(20.0 * 2.0*np.pi*x) + 0.5*np.sin(5.0 * 2.0*np.pi*x)
-
-# Apply fft
-stimulus_ps = np.abs(np.fft.fft(stimulus_data))**2
-stimulus_ps /= max(stimulus_ps)
-stimulus_freqs = np.fft.fftfreq(stimulus_data_N, T)
-stimulus_idx = np.argsort(stimulus_freqs)
-
-no_stimulus_ps = np.abs(np.fft.fft(no_stimulus_data))**2
-no_stimulus_ps /= max(no_stimulus_ps)
-no_stimulus_freqs = np.fft.fftfreq(no_stimulus_data_N, T)
-no_stimulus_idx = np.argsort(no_stimulus_freqs)
+# Apply fft and filter
+def filtered_frequency_domain_data(signal, T=1.0/192.0):
+    W = np.fft.fftfreq(int(signal.size/2) + 1, T)
+    f_signal = np.abs(np.real(np.fft.rfft(signal)))
+    f_signal[W < 7.5] = 0
+    f_signal[W > 30] = 0
+    f_signal /= max(f_signal)
+    return f_signal, W
+    
+f_baseline_data, W_baseline = filtered_frequency_domain_data(baseline_data)
+f_stimulus_data, W_stimulus = filtered_frequency_domain_data(stimulus_data)
 
 # Plot frequency domain
 if plot_baseline:
-    plt.plot(no_stimulus_freqs[no_stimulus_idx], no_stimulus_ps[no_stimulus_idx], label="Baseline", alpha=0.5, color='red')
+    plt.plot(W_baseline, f_baseline_data, label="Baseline", alpha=0.5, color='red')
 if plot_stimulus:
-    plt.plot(stimulus_freqs[stimulus_idx], stimulus_ps[stimulus_idx], label="Stimulus", alpha=0.5, color='green')
-plt.title("Power Spectral Density of Data")
+    plt.plot(W_stimulus, f_stimulus_data, label="Stimulus", alpha=0.5, color='green')
+plt.title("Spectral Density of Data")
 plt.legend()
 plt.xlabel("Frequency (Hz)")
-plt.ylabel("Normalized Power Density")
+plt.ylabel("Spectral Density")
 plt.show()

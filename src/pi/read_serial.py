@@ -39,6 +39,8 @@ while not done:
     # Record data and stimulus
     try:
        line_int = int(line)
+       if line_int < 0 or line_int >= 1024:
+           continue # skip invalid values
        print("{0} {1}".format(line_int, stimulus))
     except ValueError:
        continue
