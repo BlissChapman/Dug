@@ -37,7 +37,7 @@ Two 3D printed electrodes are sewn into a headband and an elastic chin strap is 
 
 <img src="resources/documentation/headband.jpg" alt="drawing" height="200"/>
 
-Wires are run down Alma's back into an analog circuit that is mounted on Alma's harness. The analog circuit performs low and high pass filtering on the signal, attenuating signals with a frequency less than 7 hz and greater than 31 hz. The analog circuit also amplifies the signal with a gain of about 89.2 when using a 560 ohm resistor.
+Wires are run down Alma's back into an analog circuit that is mounted on Alma's harness. The analog circuit performs low and high pass filtering on the signal, attenuating signals with a frequency less than 7 hz and greater than 31 hz. The analog circuit also amplifies the signal with a gain of about 89.2 when using a 560 ohm resistor. A potentiometer was also used to create a mechanism for further adjustable signal amplification.
 
 <img src="resources/documentation/circuit_diagram.jpg" alt="drawing" width="800"/>
 
