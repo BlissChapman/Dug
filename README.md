@@ -41,6 +41,11 @@ Wires are run down Alma's back into an analog circuit that is mounted on Alma's 
 
 <img src="resources/documentation/circuit_diagram.jpg" alt="drawing" width="800"/>
 
+(Everything else was created by Bliss, but I'm new to Github, so I apologize that I don't know how to properly format the next paragraph that I'm in charge of. - Matthew De Venecia). 
+The above diagram is the original circuit this was based on from https://www.instructables.com/id/DIY-EEG-and-ECG-Circuit/. However, some changes were made according to the diagrams shown below. In particular, the active notch filter was replaced by a passive twin T notch filter, and additional filtering circuitry was added at the end. You can view the actual circuit diagrams here: 
+Part 1: https://drive.google.com/open?id=1iB77aMJjEO7Y_EY8I94byTmmPX7W-kRe
+Part 2: https://drive.google.com/open?id=18WFvdI3_vo2zRo0OEYezHG0h1kxLOrOw
+
 Analog Circuit v1 and v2:
 
 <img src="resources/documentation/circuit_v1.jpg" alt="drawing" height="100"/> + <img src="resources/documentation/matthew_soldering.jpg" alt="drawing" height="100"/> -> <img src="resources/documentation/circuit_v2.jpg" alt="drawing" height="100"/>
